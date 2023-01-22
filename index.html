@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>First Three.js App</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="/three.js"></script>
+        <script src="/OrbitControls.js"></script>
+		<script>
+
+            const canvasEl = document.querySelector('#webgl')
+            const scene = new THREE.Scene();
+            let camera = new THREE.PerspectiveCamera(50,window.innerWidth / window.innerHeight,0.1,1000);
+            const renderer = new THREE.WebGLRenderer({antializing:true});
+            renderer.setSize(window.innerWidth,window.innerHeight);
+
+            document.body.appendChild(renderer.domElement);
+
+
+            const pointLight = new THREE.PointLight( 0xe9e9e9, 1, 100 );
+            pointLight.position.set( 9, 10, 10 );
+            scene.add( pointLight );
+
+            const MoonGeometry = new THREE.SphereGeometry( 1, 32, 16 );
+            const moonTexture = new THREE.TextureLoader().load('./moon-texture.jpg')
+            const MoonMaterial = new THREE.MeshStandardMaterial({map:moonTexture});
+            const Moon = new THREE.Mesh(MoonGeometry,MoonMaterial);
+            scene.add(Moon);
+
+            Moon.position.x = 3;
+            Moon.position.y = 3;
+
+            camera.position.z = 5;
+            camera.position.x = 3;
+            camera.position.y = 3;
+
+            /*
+            const starGeometry = new THREE.SphereGeometry(1,32,16);
+            const starMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
+            const star = new THREE.Mesh(starGeometry,starMaterial);
+            star.position.x = 1.3
+            scene.add(star);
+            */
+
+
+
+
+            let starSize = 100;
+            for(let i = 1; i<starSize;i++){
+                let rand_size = Math.random();
+                let rand_x = Math.random() * 6;
+                let rand_y = Math.random() * 6;
+                let rand_z = Math.random() * 6;
+
+                const NewstarGeometry = new THREE.SphereGeometry(0.004,6,6);
+                const NewstarMaterial = new THREE.MeshBasicMaterial({color:0xffffff});
+                const Newstar = new THREE.Mesh(NewstarGeometry,NewstarMaterial);
+                Newstar.position.x = rand_x;
+                Newstar.position.y = rand_y;
+                Newstar.position.z = rand_z;
+                scene.add(Newstar);
+            }
+
+
+
+
+
+            /*
+            const CubeGeometry = new THREE.BoxGeometry(1,1,1,1);
+            const CubeMaterial = new THREE.MeshBasicMaterial({color:0x0ff0000,wireframe:true});
+            const Cube = new THREE.Mesh(CubeGeometry,CubeMaterial);
+            Cube.position.x = 1.3
+            scene.add(Cube)
+            */
+
+
+            function onResize() {
+                renderer.setSize(window.innerWidth,window.innerHeight);
+                camera.aspect = window.innerWidth/window.innerHeight;
+                camera.updateProjectionMatrix();
+
+            }
+            function animateLoop() {
+
+                requestAnimationFrame(animateLoop);
+                renderer.render(scene,camera);
+
+                Moon.rotation.z += 0.0001;
+                Moon.rotation.y += 0.001;
+                window.addEventListener('resize',onResize)
+
+            }
+            animateLoop()
+
+		</script>
+	</body>
+</html>
